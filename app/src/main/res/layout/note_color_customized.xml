@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@color/black"
+    android:backgroundTint="@color/black"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/black"
+        android:elevation="0dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvChangeColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/domine"
+            android:paddingStart="8dp"
+            android:text="@string/change_color"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <RadioGroup
+            android:id="@+id/rgChangeColor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp">
+
+            <RadioButton
+                android:id="@+id/rbOrange"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/black"
+                android:fontFamily="@font/domine"
+                android:text="@string/orange_color"
+                android:textColor="@color/orange" />
+
+            <RadioButton
+                android:id="@+id/rbBlue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/black"
+                android:fontFamily="@font/domine"
+                android:text="@string/blue_color"
+                android:textColor="@color/blue" />
+
+            <RadioButton
+                android:id="@+id/rbGreen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/black"
+                android:fontFamily="@font/domine"
+                android:text="@string/green_color"
+                android:textColor="@color/green" />
+
+            <RadioButton
+                android:id="@+id/rbGrey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/black"
+                android:fontFamily="@font/domine"
+                android:text="@string/grey_color"
+                android:textColor="@color/gray" />
+
+            <RadioButton
+                android:id="@+id/rbRed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/black"
+                android:fontFamily="@font/domine"
+                android:text="@string/red_color"
+                android:textColor="@color/red" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/bCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:backgroundTint="@color/black"
+                android:fontFamily="@font/domine"
+                android:text="@string/cancel"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/bOk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_weight="0"
+                android:backgroundTint="@color/black"
+                android:fontFamily="@font/domine"
+                android:text="@string/ok"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Заметки</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">Поиск</string>
+    <string name="delete">Удалить</string>
+    <string name="save">Сохранить</string>
+    <string name="title">Название</string>
+    <string name="desc">Содержание</string>
+    <string name="enter_title">Пожалуйста, введите название</string>
+    <string name="change_color">Смена цвета</string>
+    <string name="choose_color">Пожалуйста, выберите цвет</string>
+    <string name="grey_color">Серый, как ваша жизнь</string>
+    <string name="red_color">Красный</string>
+    <string name="green_color">Зеленый</string>
+    <string name="orange_color">Оранжевый</string>
+    <string name="blue_color">Синий</string>
+    <string name="ok">Ок</string>
+    <string name="cancel">Назад</string>
+    <string name="filter">Фильтр</string>
+    <string name="all_notes">Все заметки</string>
+    <string name="not_found_filter">Не найдено с таким фильтром</string>
+    <string name="sure_del_note">Вы уверены, что хотите удалить?</string>
+</resources>
