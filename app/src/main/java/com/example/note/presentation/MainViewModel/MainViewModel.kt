@@ -1,22 +1,19 @@
-package com.example.note.MainViewModel
+package com.example.note.presentation.MainViewModel
 
 import android.app.Application
-import androidx.annotation.NonNull
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.example.note.DataBase.DataBaseNote
-import com.example.note.DataBase.RepositoryNote
-import com.example.note.model.Note
+import com.example.note.data.DataBase.DataBaseNote
+import com.example.note.data.DataBase.NoteDbModel
+import com.example.note.data.DataBase.RepositoryNote
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    val readAllData: LiveData<List<Note>>
+    val readAllData: LiveData<List<NoteDbModel>>
     private val repository: RepositoryNote
 
     init {
@@ -25,46 +22,46 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         readAllData = repository.readAllNote
     }
 
-    fun getNoteById(noteId: Int): LiveData<Note?> {
+    fun getNoteById(noteId: Int): LiveData<NoteDbModel?> {
         return liveData(Dispatchers.IO) {
             val notes = repository.getNoteById(noteId)
             emitSource(notes.map { it }) // Преобразуем LiveData<List<Note>> в LiveData<List<Note>>
         }
     }
 
-    fun insertNote(note: Note) {
+    fun insertNote(note: NoteDbModel) {
         viewModelScope.launch {
             repository.insertNote(note)
         }
     }
 
-    fun updateNote(note: Note) {
+    fun updateNote(note: NoteDbModel) {
         viewModelScope.launch {
             repository.updateNote(note)
         }
     }
 
-    fun deleteNote(note: Note) {
+    fun deleteNote(note: NoteDbModel) {
         viewModelScope.launch {
             repository.deleteNote(note)
         }
     }
 
-    fun fetchAllNotes(): LiveData<List<Note>> {
+    fun fetchAllNotes(): LiveData<List<NoteDbModel>> {
         return liveData(Dispatchers.IO) {
             val notes = repository.getAllNotes()
             emitSource(notes.map { it }) // Преобразуем LiveData<List<Note>> в LiveData<List<Note>>
         }
     }
 
-    fun filterNotesByColor(color: Int):  LiveData<List<Note>> {
+    fun filterNotesByColor(color: Int):  LiveData<List<NoteDbModel>> {
         return liveData(Dispatchers.IO) {
             val notes = repository.filterNotesByColor(color)
             emitSource(notes.map { it })
         }
     }
 
-    fun searchNotes(query: String?): LiveData<List<Note>> {
+    fun searchNotes(query: String?): LiveData<List<NoteDbModel>> {
         return liveData(Dispatchers.IO) {
             val notes = repository.searchNotes(query)
             emitSource(notes.map { it }) // Преобразуем LiveData<List<Note>> в LiveData<List<Note>>

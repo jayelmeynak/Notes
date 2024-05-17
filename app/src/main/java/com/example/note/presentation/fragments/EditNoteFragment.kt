@@ -1,13 +1,10 @@
-package com.example.note.fragments
+package com.example.note.presentation.fragments
 
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.graphics.Rect
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -15,10 +12,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -26,20 +21,20 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.note.MainViewModel.MainViewModel
+import com.example.note.presentation.MainViewModel.MainViewModel
 import com.example.note.R
 import com.example.note.databinding.FragmentEditNoteBinding
-import com.example.note.model.Note
+import com.example.note.domain.Note
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import com.example.note.dialogmanager.DialogManager
+import com.example.note.presentation.dialogmanager.DialogManager
 
 class EditNoteFragment : Fragment(), MenuProvider {
     private lateinit var binding: FragmentEditNoteBinding
     private lateinit var viewModel: MainViewModel
     private var noteColor: Int = R.color.orange
-    private val args by navArgs<EditNoteFragmentArgs>()
+    private val args by navArgs<com.example.note.presentation.fragments.EditNoteFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

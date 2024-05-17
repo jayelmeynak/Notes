@@ -1,15 +1,13 @@
-package com.example.note.dialogmanager
+package com.example.note.presentation.dialogmanager
 
 import android.app.AlertDialog
-import android.view.LayoutInflater
-import com.example.note.R
 import android.content.Context
-import android.view.inputmethod.InputMethodManager
+import android.view.LayoutInflater
 import android.widget.Button
-import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
+import com.example.note.R
 
 
 object DialogManager {

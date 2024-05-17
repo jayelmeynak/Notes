@@ -1,7 +1,6 @@
-package com.example.note.fragments
+package com.example.note.presentation.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
@@ -20,13 +18,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.note.MainViewModel.MainViewModel
+import com.example.note.presentation.MainViewModel.MainViewModel
 import com.example.note.R
-import com.example.note.adapter.NoteAdapter
+import com.example.note.presentation.adapter.NoteAdapter
 import com.example.note.databinding.FragmentHomeBinding
-import com.example.note.dialogmanager.DialogManager
-import com.example.note.model.Note
-import kotlin.math.log
+import com.example.note.presentation.dialogmanager.DialogManager
+import com.example.note.domain.Note
 import kotlin.properties.Delegates
 
 class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {

@@ -1,14 +1,12 @@
-package com.example.note.DataBase
+package com.example.note.data.DataBase
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.note.model.Note
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlin.reflect.KParameter
 
-@Database(entities = [Note::class], version = 2, exportSchema = false)
+@Database(entities = [NoteDbModel::class], version = 2, exportSchema = false)
 abstract class DataBaseNote: RoomDatabase() {
     abstract fun getNoteDao(): DaoNote
     companion object {
@@ -22,7 +20,7 @@ abstract class DataBaseNote: RoomDatabase() {
                 INSTANCE = it
             }
         }
-        fun getDatabase(context: Context):DataBaseNote{
+        fun getDatabase(context: Context): DataBaseNote {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance
