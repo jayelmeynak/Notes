@@ -53,7 +53,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val filterResults: LiveData<List<Note>> = _filterQuery.switchMap { query ->
         liveData(Dispatchers.IO) {
-            filterNotesUseCase.filterNotes(query)
+            emitSource(filterNotesUseCase.filterNotes(query))
         }
     }
 

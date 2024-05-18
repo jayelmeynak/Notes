@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -103,7 +104,7 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-            return false
+        return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
@@ -127,7 +128,15 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
             R.id.filterColor -> {
                 DialogManager.filterNoteColor(requireContext(), object : DialogManager.Listener {
                     override fun onClick(name: Int) {
-                        viewModel.setFilterColor(name)
+                        val whiteColor = ContextCompat.getColor(requireContext(), R.color.white)
+                        if (whiteColor != name) {
+                            viewModel.setFilterColor(name)
+                        }
+                        else{
+                            viewModel.noteList.observe(viewLifecycleOwner) { noteList ->
+                                adapter.submitList(noteList)
+                            }
+                        }
                     }
                 })
             }
