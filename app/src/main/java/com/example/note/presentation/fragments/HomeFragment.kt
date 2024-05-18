@@ -23,13 +23,11 @@ import com.example.note.databinding.FragmentHomeBinding
 import com.example.note.presentation.DialogManager
 import com.example.note.presentation.MainViewModel
 import com.example.note.presentation.NoteListAdapter
-import kotlin.properties.Delegates
 
 class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: NoteListAdapter
-    private var filterColor by Delegates.notNull<Int>()
 
 
     override fun onCreateView(
@@ -44,7 +42,6 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         rcInit()
-        filterColor = binding.tv.textColors.defaultColor
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         binding.bAddNote.setOnClickListener {
@@ -55,9 +52,6 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
             adapter.submitList(notes)
         }
         viewModel.noteList.observe(viewLifecycleOwner) { noteList ->
-            adapter.submitList(noteList)
-        }
-        viewModel.filterResults.observe(viewLifecycleOwner) { noteList ->
             adapter.submitList(noteList)
         }
     }
@@ -131,8 +125,10 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
                         val whiteColor = ContextCompat.getColor(requireContext(), R.color.white)
                         if (whiteColor != name) {
                             viewModel.setFilterColor(name)
-                        }
-                        else{
+                            viewModel.filterResults.observe(viewLifecycleOwner) { noteList ->
+                                adapter.submitList(noteList)
+                            }
+                        } else {
                             viewModel.noteList.observe(viewLifecycleOwner) { noteList ->
                                 adapter.submitList(noteList)
                             }

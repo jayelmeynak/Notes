@@ -53,7 +53,7 @@ class AddNoteFragment : Fragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val menuHost: MenuHost = requireActivity()
-        noteColor = binding.tvAdd.textColors.defaultColor
+        noteColor = ContextCompat.getColor(requireContext(), R.color.orange)
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         binding.bAddDoneEdit.setOnClickListener {
             onStop()
