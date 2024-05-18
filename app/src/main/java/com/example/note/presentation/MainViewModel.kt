@@ -45,7 +45,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val searchResults: LiveData<List<Note>> = _searchQuery.switchMap { query ->
         liveData(Dispatchers.IO) {
-            searchNotesUseCase.searchNotes(query)
+            emitSource(searchNotesUseCase.searchNotes(query))
         }
     }
 

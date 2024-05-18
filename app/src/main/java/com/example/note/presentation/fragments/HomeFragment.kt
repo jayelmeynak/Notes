@@ -50,8 +50,8 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
             findNavController().navigate(R.id.action_homeFragment_to_addNoteFragment)
         }
 
-        viewModel.searchResults.observe(viewLifecycleOwner) { noteList ->
-            adapter.submitList(noteList)
+        viewModel.searchResults.observe(viewLifecycleOwner) { notes ->
+            adapter.submitList(notes)
         }
         viewModel.noteList.observe(viewLifecycleOwner) { noteList ->
             adapter.submitList(noteList)
@@ -86,9 +86,9 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
 
 
     private fun searchNote(query: String?) {
-        viewModel.searchNotes(query)
+        val searchQuery = "%$query"
+        viewModel.searchNotes(searchQuery)
     }
-
 
     private fun rcInit() = with(binding) {
         adapter = NoteListAdapter()
@@ -103,7 +103,7 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        return false
+            return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
