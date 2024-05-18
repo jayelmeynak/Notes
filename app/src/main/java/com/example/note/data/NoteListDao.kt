@@ -11,13 +11,13 @@ import androidx.room.Update
 interface NoteListDao {
 
     @Insert
-    fun addNote(note: NoteDbModel)
+    suspend fun addNote(note: NoteDbModel)
 
     @Update
-    fun editNote(note: NoteDbModel)
+    suspend fun editNote(note: NoteDbModel)
 
     @Delete
-    fun deleteNote(note: NoteDbModel)
+    suspend fun deleteNote(note: NoteDbModel)
 
     @Query("SELECT * FROM NoteDbModel ORDER BY noteEditTime DESC")
     fun getAllNotes(): LiveData<List<NoteDbModel>>
@@ -30,6 +30,6 @@ interface NoteListDao {
 
 
     @Query("SELECT * FROM NoteDbModel WHERE id = :noteId")
-    fun getNoteById(noteId: Int): NoteDbModel
+    suspend fun getNoteById(noteId: Int): NoteDbModel
 
 }
