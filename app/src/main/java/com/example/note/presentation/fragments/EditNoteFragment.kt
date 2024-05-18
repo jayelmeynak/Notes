@@ -29,7 +29,7 @@ import com.example.note.presentation.MainViewModel
 class EditNoteFragment : Fragment(), MenuProvider {
     private lateinit var binding: FragmentEditNoteBinding
     private lateinit var viewModel: MainViewModel
-    private var noteColorArg: Int = R.color.orange
+    private var noteColorArg: Int = 0
     private val args by navArgs<EditNoteFragmentArgs>()
 
     override fun onCreateView(
@@ -54,7 +54,7 @@ class EditNoteFragment : Fragment(), MenuProvider {
             binding.edEditNoteTitle.setText(note.noteTitle)
             binding.edEditNoteDesc.setText(note.noteDesc)
             binding.tvEditTimeDate.setText(note.noteEditTime)
-//            noteColorArg = note.noteColor
+            noteColorArg = note.noteColor
             setColorImage()
         }
         val menuHost: MenuHost = requireActivity()
