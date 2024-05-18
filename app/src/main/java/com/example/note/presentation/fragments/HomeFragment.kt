@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.note.R
 import com.example.note.databinding.FragmentHomeBinding
@@ -59,6 +61,29 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
         }
     }
 
+    private fun setupSwipeListener(rvShopList: RecyclerView) {
+        val callback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val item = adapter.currentList[viewHolder.adapterPosition]
+                viewModel.deleteNote(item)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper.attachToRecyclerView(rvShopList)
+    }
+
 
     private fun searchNote(query: String?) {
         viewModel.searchNotes(query)
@@ -70,6 +95,11 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
         rcNote.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         rcNote.setHasFixedSize(true)
         rcNote.adapter = adapter
+        adapter.onNoteClickListener = {
+            val action = HomeFragmentDirections.actionHomeFragmentToEditNoteFragment(it.id)
+            findNavController().navigate(action)
+        }
+        setupSwipeListener(binding.rcNote)
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
