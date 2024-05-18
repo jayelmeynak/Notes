@@ -1,4 +1,4 @@
-package com.example.note.presentation.MainViewModel
+package com.example.note.presentation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

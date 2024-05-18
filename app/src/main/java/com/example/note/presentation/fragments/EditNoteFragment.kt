@@ -21,14 +21,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.note.presentation.MainViewModel.MainViewModel
+import com.example.note.presentation.MainViewModel
 import com.example.note.R
 import com.example.note.databinding.FragmentEditNoteBinding
 import com.example.note.domain.Note
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import com.example.note.presentation.dialogmanager.DialogManager
+import com.example.note.presentation.DialogManager
 
 class EditNoteFragment : Fragment(), MenuProvider {
     private lateinit var binding: FragmentEditNoteBinding

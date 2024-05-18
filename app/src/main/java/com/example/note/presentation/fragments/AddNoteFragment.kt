@@ -20,10 +20,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.note.presentation.MainViewModel.MainViewModel
+import com.example.note.presentation.MainViewModel
 import com.example.note.R
 import com.example.note.databinding.FragmentAddNoteBinding
-import com.example.note.presentation.dialogmanager.DialogManager
+import com.example.note.presentation.DialogManager
 import com.example.note.domain.Note
 import java.text.SimpleDateFormat
 import java.util.Date

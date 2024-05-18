@@ -1,4 +1,4 @@
-package com.example.note.presentation.dialogmanager
+package com.example.note.presentation
 
 import android.app.AlertDialog
 import android.content.Context

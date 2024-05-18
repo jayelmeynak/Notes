@@ -18,11 +18,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.note.presentation.MainViewModel.MainViewModel
+import com.example.note.presentation.MainViewModel
 import com.example.note.R
-import com.example.note.presentation.adapter.NoteAdapter
+import com.example.note.presentation.NoteAdapter
 import com.example.note.databinding.FragmentHomeBinding
-import com.example.note.presentation.dialogmanager.DialogManager
+import com.example.note.presentation.DialogManager
 import com.example.note.domain.Note
 import kotlin.properties.Delegates
 
