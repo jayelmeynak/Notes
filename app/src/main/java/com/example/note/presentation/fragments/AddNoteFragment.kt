@@ -31,6 +31,7 @@ class AddNoteFragment : Fragment(), MenuProvider {
     private lateinit var binding: FragmentAddNoteBinding
     private lateinit var viewModel: MainViewModel
     private var noteColor by Delegates.notNull<Int>()
+    private var noteSaved = false
 
 
     override fun onCreateView(
@@ -43,7 +44,9 @@ class AddNoteFragment : Fragment(), MenuProvider {
     }
 
     override fun onStop() {
-        addNoteToDataBase()
+        if (!noteSaved) {
+            addNoteToDataBase()
+        }
         super.onStop()
     }
 
@@ -53,17 +56,18 @@ class AddNoteFragment : Fragment(), MenuProvider {
         noteColor = binding.tvAdd.textColors.defaultColor
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         binding.bAddDoneEdit.setOnClickListener {
-            addNoteToDataBase()
+            onStop()
         }
 
-        binding.clAddNote.setOnClickListener{
+        binding.clAddNote.setOnClickListener {
             hideKeyboard()
         }
         binding.tvAddEditTimeDate.text = getCurrentDateTime()
     }
 
     private fun hideKeyboard() {
-        val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
@@ -72,6 +76,7 @@ class AddNoteFragment : Fragment(), MenuProvider {
         val noteDesc = binding.edAddNoteDesc.text.toString()
         if (noteTitle.isNotEmpty()) {
             viewModel.addNote(noteTitle, noteDesc, noteColor)
+            noteSaved = true
             findNavController().popBackStack(R.id.homeFragment, false)
         } else {
             Toast.makeText(requireContext(), R.string.enter_title, Toast.LENGTH_SHORT).show()
@@ -83,6 +88,7 @@ class AddNoteFragment : Fragment(), MenuProvider {
         val date = Date()
         return dateFormat.format(date)
     }
+
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menu.clear()
         menuInflater.inflate(R.menu.add_menu, menu)
@@ -95,7 +101,8 @@ class AddNoteFragment : Fragment(), MenuProvider {
                     override fun onClick(name: Int) {
                         noteColor = name
                         val imageView = binding.imageView
-                        val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_launch)
+                        val drawable =
+                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_launch)
                         drawable?.setTint(noteColor)
                         imageView.setImageDrawable(drawable)
 
@@ -104,7 +111,7 @@ class AddNoteFragment : Fragment(), MenuProvider {
                 true
             }
 
-            R.id.saveAddNote ->{
+            R.id.saveAddNote -> {
                 addNoteToDataBase()
                 true
             }
