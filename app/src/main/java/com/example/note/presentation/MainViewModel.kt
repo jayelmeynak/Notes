@@ -11,6 +11,7 @@ import com.example.note.data.NoteListRepositoryImpl
 import com.example.note.domain.AddNoteUseCase
 import com.example.note.domain.DeleteNoteUseCase
 import com.example.note.domain.EditNoteUseCase
+import com.example.note.domain.FilterNotesUseCase
 import com.example.note.domain.GetNoteListUseCase
 import com.example.note.domain.GetNoteUseCase
 import com.example.note.domain.Note
@@ -29,6 +30,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val getNoteUseCase = GetNoteUseCase(repository)
     private val getNoteListUseCase = GetNoteListUseCase(repository)
     private val searchNotesUseCase = SearchNotesUseCase(repository)
+    private val filterNotesUseCase = FilterNotesUseCase(repository)
     val noteList = getNoteListUseCase.getNoteList()
 
     private val _note = MutableLiveData<Note>()
@@ -44,6 +46,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val searchResults: LiveData<List<Note>> = _searchQuery.switchMap { query ->
         liveData(Dispatchers.IO) {
             searchNotesUseCase.searchNotes(query)
+        }
+    }
+
+    private val _filterQuery = MutableLiveData<Int>()
+
+    val filterResults: LiveData<List<Note>> = _filterQuery.switchMap { query ->
+        liveData(Dispatchers.IO) {
+            filterNotesUseCase.filterNotes(query)
         }
     }
 
@@ -87,6 +97,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun searchNotes(query: String?){
         _searchQuery.value = query
+    }
+
+    fun setFilterColor(query: Int){
+        _filterQuery.value = query
     }
 
     fun getNote(noteId: Int) {
