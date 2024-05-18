@@ -42,5 +42,11 @@ class NoteListRepositoryImpl(application: Application) : NoteListRepository {
         }
     }
 
-
+    override suspend fun filterNotes(query: Int): LiveData<List<Note>> {
+        return noteListDao.filterNotesByColor(query).map { list ->
+            list.map { noteDbModel ->
+                mapper.mapDbModelToEntity(noteDbModel)
+            }
+        }
+    }
 }
