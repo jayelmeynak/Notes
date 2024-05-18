@@ -18,18 +18,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.note.presentation.MainViewModel.MainViewModel
+import com.example.note.presentation.MainViewModel
 import com.example.note.R
-import com.example.note.presentation.adapter.NoteAdapter
+import com.example.note.presentation.NoteListAdapter
 import com.example.note.databinding.FragmentHomeBinding
-import com.example.note.presentation.dialogmanager.DialogManager
+import com.example.note.presentation.DialogManager
 import com.example.note.domain.Note
 import kotlin.properties.Delegates
 
 class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: MainViewModel
-    private lateinit var adapter: NoteAdapter
+    private lateinit var adapter: NoteListAdapter
     private var filterColor by Delegates.notNull<Int>()
 
 
@@ -68,7 +68,7 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
 
 
     private fun rcInit() = with(binding) {
-        adapter = NoteAdapter()
+        adapter = NoteListAdapter()
         rcNote.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         rcNote.setHasFixedSize(true)
         rcNote.adapter = adapter
