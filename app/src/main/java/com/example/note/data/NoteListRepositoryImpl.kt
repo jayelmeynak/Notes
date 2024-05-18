@@ -26,6 +26,14 @@ class NoteListRepositoryImpl(application: Application) : NoteListRepository {
         return mapper.mapDbModelToEntity(noteListDao.getNoteById(noteId))
     }
 
+    override suspend fun serchNotes(query: String?): LiveData<List<Note>> {
+        return noteListDao.searchNotes(query).map { list ->
+            list.map { noteDbModel ->
+                mapper.mapDbModelToEntity(noteDbModel)
+            }
+        }
+    }
+
     override fun getNoteList(): LiveData<List<Note>> {
         return noteListDao.getAllNotes().map { list ->
             list.map { noteDbModel ->

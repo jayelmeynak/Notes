@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.example.note.data.NoteListRepositoryImpl
 import com.example.note.domain.AddNoteUseCase
@@ -12,6 +14,8 @@ import com.example.note.domain.EditNoteUseCase
 import com.example.note.domain.GetNoteListUseCase
 import com.example.note.domain.GetNoteUseCase
 import com.example.note.domain.Note
+import com.example.note.domain.SearchNotesUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -24,7 +28,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val deleteNoteUseCase = DeleteNoteUseCase(repository)
     private val getNoteUseCase = GetNoteUseCase(repository)
     private val getNoteListUseCase = GetNoteListUseCase(repository)
-    val shopList = getNoteListUseCase.getNoteList()
+    private val searchNotesUseCase = SearchNotesUseCase(repository)
+    val noteList = getNoteListUseCase.getNoteList()
 
     private val _note = MutableLiveData<Note>()
     val note: LiveData<Note>
@@ -33,6 +38,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
+
+    private val _searchQuery = MutableLiveData<String?>()
+
+    val searchResults: LiveData<List<Note>> = _searchQuery.switchMap { query ->
+        liveData(Dispatchers.IO) {
+            searchNotesUseCase.searchNotes(query)
+        }
+    }
 
     fun addNote(noteTitle: String, noteDesc: String, noteColor: Int) {
         if (noteTitle.isNotEmpty()) {
@@ -70,6 +83,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             deleteNoteUseCase.deleteNote(note)
         }
+    }
+
+    fun searchNotes(query: String?){
+        _searchQuery.value = query
     }
 
     fun getNote(noteId: Int) {
