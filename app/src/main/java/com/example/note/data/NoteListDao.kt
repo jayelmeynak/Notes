@@ -1,4 +1,4 @@
-package com.example.note.data.DataBase
+package com.example.note.data
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -8,13 +8,13 @@ import androidx.room.Query
 import androidx.room.Update
 
 @Dao
-interface DaoNote {
+interface NoteListDao {
 
     @Insert
-    fun insertNote(note: NoteDbModel)
+    fun addNote(note: NoteDbModel)
 
     @Update
-    fun updateNote(note: NoteDbModel)
+    fun editNote(note: NoteDbModel)
 
     @Delete
     fun deleteNote(note: NoteDbModel)
@@ -30,6 +30,6 @@ interface DaoNote {
 
 
     @Query("SELECT * FROM NoteDbModel WHERE id = :noteId")
-    fun getNoteById(noteId: Int): LiveData<NoteDbModel?>
+    fun getNoteById(noteId: Int): NoteDbModel
 
 }

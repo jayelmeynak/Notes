@@ -1,4 +1,4 @@
-package com.example.note.data.DataBase
+package com.example.note.data
 
 
 import android.os.Parcelable
