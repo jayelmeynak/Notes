@@ -3,68 +3,91 @@ package com.example.note.presentation.MainViewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.map
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.note.data.DataBase.DataBaseNote
-import com.example.note.data.DataBase.NoteDbModel
-import com.example.note.data.DataBase.RepositoryNote
-import kotlinx.coroutines.Dispatchers
+import com.example.note.data.NoteListRepositoryImpl
+import com.example.note.domain.AddNoteUseCase
+import com.example.note.domain.DeleteNoteUseCase
+import com.example.note.domain.EditNoteUseCase
+import com.example.note.domain.GetNoteListUseCase
+import com.example.note.domain.GetNoteUseCase
+import com.example.note.domain.Note
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    val readAllData: LiveData<List<NoteDbModel>>
-    private val repository: RepositoryNote
+    private val repository = NoteListRepositoryImpl(application)
+    private val addNoteUseCase = AddNoteUseCase(repository)
+    private val editNoteUseCase = EditNoteUseCase(repository)
+    private val deleteNoteUseCase = DeleteNoteUseCase(repository)
+    private val getNoteUseCase = GetNoteUseCase(repository)
+    private val getNoteListUseCase = GetNoteListUseCase(repository)
+    val shopList = getNoteListUseCase.getNoteList()
 
-    init {
-        val noteDao = DataBaseNote.getDatabase(application).getNoteDao()
-        repository = RepositoryNote(noteDao)
-        readAllData = repository.readAllNote
-    }
+    private val _note = MutableLiveData<Note>()
+    val note: LiveData<Note>
+        get() = _note
 
-    fun getNoteById(noteId: Int): LiveData<NoteDbModel?> {
-        return liveData(Dispatchers.IO) {
-            val notes = repository.getNoteById(noteId)
-            emitSource(notes.map { it }) // Преобразуем LiveData<List<Note>> в LiveData<List<Note>>
+    private val _shouldCloseScreen = MutableLiveData<Unit>()
+    val shouldCloseScreen: LiveData<Unit>
+        get() = _shouldCloseScreen
+
+    fun addNote(noteTitle: String, noteDesc: String, noteColor: Int) {
+        if (noteTitle.isNotEmpty()) {
+            val noteEditTime = getCurrentDateTime()
+            val note = Note(noteTitle, noteDesc, noteEditTime, noteColor)
+            viewModelScope.launch {
+                addNoteUseCase.addNote(note)
+                finishWork()
+            }
         }
+
     }
 
-    fun insertNote(note: NoteDbModel) {
+    fun editNote(noteTitle: String, noteDesc: String, noteColor: Int) {
+        if (noteTitle.isNotEmpty()) {
+            val noteEditTime = getCurrentDateTime()
+            _note.value?.let {
+                val note =
+                    it.copy(
+                        noteTitle = noteTitle,
+                        noteDesc = noteDesc,
+                        noteEditTime = noteEditTime,
+                        noteColor = noteColor
+                    )
+                viewModelScope.launch {
+                    editNoteUseCase.editNote(note)
+                    finishWork()
+                }
+            }
+        }
+
+    }
+
+    fun deleteNote(note: Note) {
         viewModelScope.launch {
-            repository.insertNote(note)
+            deleteNoteUseCase.deleteNote(note)
         }
     }
 
-    fun updateNote(note: NoteDbModel) {
+    fun getNote(noteId: Int) {
         viewModelScope.launch {
-            repository.updateNote(note)
+            val note = getNoteUseCase.getNote(noteId)
+            _note.value = note
         }
+
     }
 
-    fun deleteNote(note: NoteDbModel) {
-        viewModelScope.launch {
-            repository.deleteNote(note)
-        }
+    private fun finishWork() {
+        _shouldCloseScreen.value = Unit
     }
 
-    fun fetchAllNotes(): LiveData<List<NoteDbModel>> {
-        return liveData(Dispatchers.IO) {
-            val notes = repository.getAllNotes()
-            emitSource(notes.map { it }) // Преобразуем LiveData<List<Note>> в LiveData<List<Note>>
-        }
+    private fun getCurrentDateTime(): String {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
+        val date = Date()
+        return dateFormat.format(date)
     }
 
-    fun filterNotesByColor(color: Int):  LiveData<List<NoteDbModel>> {
-        return liveData(Dispatchers.IO) {
-            val notes = repository.filterNotesByColor(color)
-            emitSource(notes.map { it })
-        }
-    }
-
-    fun searchNotes(query: String?): LiveData<List<NoteDbModel>> {
-        return liveData(Dispatchers.IO) {
-            val notes = repository.searchNotes(query)
-            emitSource(notes.map { it }) // Преобразуем LiveData<List<Note>> в LiveData<List<Note>>
-        }
-    }
 }
