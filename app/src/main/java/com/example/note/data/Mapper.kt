@@ -6,11 +6,11 @@ class Mapper {
 
     fun mapDbModelToEntity(noteDbModel: NoteDbModel): Note {
         return Note(
-            noteDbModel.id,
             noteDbModel.noteTitle,
             noteDbModel.noteDesc,
             noteDbModel.noteEditTime,
-            noteDbModel.noteColor
+            noteDbModel.noteColor,
+            noteDbModel.id
         )
     }
 

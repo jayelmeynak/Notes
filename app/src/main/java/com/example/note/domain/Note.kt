@@ -3,9 +3,13 @@ package com.example.note.domain
 
 
 data class Note(
-    val id: Int,
     var noteTitle: String,
     var noteDesc: String,
     var noteEditTime: String,
-    var noteColor: Int
-)
+    var noteColor: Int,
+    val id: Int = UNDEFINED_ID
+){
+    companion object{
+        const val UNDEFINED_ID = 0
+    }
+}
