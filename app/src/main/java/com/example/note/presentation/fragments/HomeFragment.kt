@@ -1,87 +1,101 @@
-package com.example.note.fragments
+package com.example.note.presentation.fragments
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.note.MainViewModel.MainViewModel
 import com.example.note.R
-import com.example.note.adapter.NoteAdapter
 import com.example.note.databinding.FragmentHomeBinding
-import com.example.note.dialogmanager.DialogManager
-import com.example.note.model.Note
-import kotlin.math.log
-import kotlin.properties.Delegates
+import com.example.note.presentation.DialogManager
+import com.example.note.presentation.MainViewModel
+import com.example.note.presentation.NoteListAdapter
 
 class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: MainViewModel
-    private lateinit var adapter: NoteAdapter
-    private var filterColor by Delegates.notNull<Int>()
+    private lateinit var adapter: NoteListAdapter
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.readAllData.observe(viewLifecycleOwner, Observer { note ->
-            adapter.setData(note)
-        })
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         rcInit()
-        filterColor = binding.tv.textColors.defaultColor
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         binding.bAddNote.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_addNoteFragment)
         }
+
+        viewModel.searchResults.observe(viewLifecycleOwner) { notes ->
+            adapter.submitList(notes)
+        }
+        viewModel.noteList.observe(viewLifecycleOwner) { noteList ->
+            adapter.submitList(noteList)
+        }
+    }
+
+    private fun setupSwipeListener(rvShopList: RecyclerView) {
+        val callback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val item = adapter.currentList[viewHolder.adapterPosition]
+                viewModel.deleteNote(item)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper.attachToRecyclerView(rvShopList)
     }
 
 
     private fun searchNote(query: String?) {
         val searchQuery = "%$query"
-
-        viewModel.searchNotes(searchQuery).observe(this) { list ->
-            adapter.setData(list)
-        }
+        viewModel.searchNotes(searchQuery)
     }
 
-
     private fun rcInit() = with(binding) {
-        adapter = NoteAdapter()
+        adapter = NoteListAdapter()
         rcNote.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         rcNote.setHasFixedSize(true)
         rcNote.adapter = adapter
+        adapter.onNoteClickListener = {
+            val action = HomeFragmentDirections.actionHomeFragmentToEditNoteFragment(it.id)
+            findNavController().navigate(action)
+        }
+        setupSwipeListener(binding.rcNote)
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = HomeFragment()
-    }
-
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         return false
@@ -108,33 +122,16 @@ class HomeFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener {
             R.id.filterColor -> {
                 DialogManager.filterNoteColor(requireContext(), object : DialogManager.Listener {
                     override fun onClick(name: Int) {
-                        var isWhite = false
-                        val liveDataList: LiveData<List<Note>>
-                        if (filterColor == name) {
-                            isWhite = true
+                        val whiteColor = ContextCompat.getColor(requireContext(), R.color.white)
+                        if (whiteColor != name) {
+                            viewModel.setFilterColor(name)
+                            viewModel.filterResults.observe(viewLifecycleOwner) { noteList ->
+                                adapter.submitList(noteList)
+                            }
                         } else {
-                            liveDataList = viewModel.filterNotesByColor(name)
-                            liveDataList.observe(viewLifecycleOwner, Observer { list ->
-                                if (list.isEmpty()) {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        R.string.not_found_filter,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    viewModel.readAllData.observe(
-                                        viewLifecycleOwner,
-                                        Observer { notes ->
-                                            adapter.setData(notes)
-                                        })
-                                } else {
-                                    adapter.setData(list)
-                                }
-                            })
-                        }
-                        if (isWhite) {
-                            viewModel.readAllData.observe(viewLifecycleOwner, Observer { notes ->
-                                adapter.setData(notes)
-                            })
+                            viewModel.noteList.observe(viewLifecycleOwner) { noteList ->
+                                adapter.submitList(noteList)
+                            }
                         }
                     }
                 })
